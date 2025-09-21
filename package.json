@@ -7,10 +7,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start",
-    "start:dev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\start-dev.ps1",
-    "start:dev:3001": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\start-dev.ps1 -Port 3001",
-    "stop:dev": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts\\stop-dev.ps1"
+    "start": "next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

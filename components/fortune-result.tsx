@@ -15,13 +15,27 @@ function renderFortuneSections(fortune: any) {
     { key: 'skillFortune', title: '기술 운' },
     { key: 'physicalFortune', title: '체력 운' },
     { key: 'networkFortune', title: '인맥 운' },
-    { key: 'overallMessage', title: '종합 메시지' },
     { key: 'finalAdvice', title: '마무리 조언' }
   ]
 
   return sections.map((section, index) => {
     const content = fortune.title[section.key]
     if (!content) return null
+    
+    // 마무리 조언은 특별한 스타일링 적용
+    if (section.key === 'finalAdvice') {
+      return (
+        <div key={index} className="mb-6">
+          <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl p-6 border border-yellow-200 shadow-sm">
+            <div className="text-center">
+              <div className="text-lg leading-relaxed text-amber-800 font-medium italic">
+                "{content}"
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
     
     return (
       <div key={index} className="mb-6">
@@ -49,27 +63,34 @@ export function FortuneResult({ userInfo, fortuneData, onRestart }: FortuneResul
       {/* 메인 운세 카드 */}
       <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl">
         <CardContent className="p-8">
-          {/* 골신 할아버지의 운세 헤더 */}
+          {/* 나의 올해 운세는? 헤더 */}
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">골신 할아버지의 운세</h2>
-            <p className="text-gray-600 mb-6">1000년 넘게 골프를 쳐온 신선의 지혜</p>
+            {/* 골프 테마 그라데이션 제목 */}
+            <div className="relative mb-8">
+              <h2 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 drop-shadow-lg mb-4">
+                나의 올해 운세는?
+              </h2>
+              {/* 파티클 효과 */}
+              <div className="absolute -top-2 -left-2 w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
+              <div className="absolute -top-1 -right-3 w-3 h-3 bg-yellow-300 rounded-full animate-ping" style={{animationDelay: '0.5s'}}></div>
+              <div className="absolute -bottom-2 -left-1 w-2 h-2 bg-yellow-400 rounded-full animate-ping" style={{animationDelay: '1s'}}></div>
+              <div className="absolute -bottom-1 -right-2 w-3 h-3 bg-yellow-300 rounded-full animate-ping" style={{animationDelay: '1.5s'}}></div>
+            </div>
             
-            {/* 캐릭터 이미지와 제목 */}
-            <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+            {/* 캐릭터 이미지 (원형 제거) */}
+            <div className="w-40 h-40 mx-auto mb-6 flex items-center justify-center">
               <Image 
                 src="/hello.png" 
                 alt="골신 캐릭터" 
-                width={128} 
-                height={128} 
+                width={160} 
+                height={160} 
                 className="w-full h-full object-contain"
                 onError={(e) => {
-                  // 이미지 로드 실패 시 폴백
                   e.currentTarget.style.display = 'none'
                   const fallback = e.currentTarget.nextElementSibling as HTMLElement
                   if (fallback) fallback.style.display = 'flex'
                 }}
               />
-              {/* 폴백 아이콘 */}
               <div 
                 className="w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center"
                 style={{ display: 'none' }}
@@ -77,7 +98,8 @@ export function FortuneResult({ userInfo, fortuneData, onRestart }: FortuneResul
                 <span className="text-6xl">🧙‍♂️</span>
               </div>
             </div>
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
               {userInfo.name}의 골프 운세는 말이지...
             </h1>
             <p className="text-xl text-gray-600 font-medium">
@@ -128,9 +150,11 @@ export function FortuneResult({ userInfo, fortuneData, onRestart }: FortuneResul
           </div>
 
           {/* 인사말 */}
-          <div className="mb-8">
-            <p className="text-lg leading-relaxed text-gray-700">
-              좋네… 자네의 운세를 보자고 했지? 생년월일 보니, {userInfo.birthDate.slice(2, 4)}년생… {userInfo.gender}이라고? 음, 기운이 뚜렷하네. 좋아.
+          <div className="mb-8 text-center">
+            <p className="text-lg leading-relaxed text-green-700 font-bold">
+              좋네… 자네의 운세를 보자고 했지?<br />
+              생년월일 보니, {userInfo.birthDate.slice(2, 4)}년생…<br />
+              {userInfo.gender}이라고? 음, 기운이 뚜렷하네. 좋아.
             </p>
           </div>
 

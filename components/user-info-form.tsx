@@ -24,6 +24,14 @@ export function UserInfoForm({ onComplete }: UserInfoFormProps) {
   const totalSteps = 6 // 기본 6단계: 이름, 휴대폰번호, 성별, 생년월일, 출생시간, 핸디캡
 
   const handleNext = () => {
+    // 키보드 숨기기
+    if (typeof window !== 'undefined') {
+      const activeElement = document.activeElement as HTMLElement
+      if (activeElement && activeElement.blur) {
+        activeElement.blur()
+      }
+    }
+    
     if (step < totalSteps) {
       setStep(step + 1)
     } else {
@@ -166,7 +174,7 @@ export function UserInfoForm({ onComplete }: UserInfoFormProps) {
 
   return (
     <>
-      <div className="w-full max-w-sm mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[600px]">
+      <div className="w-full max-w-sm mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col min-h-[600px] sm:h-[600px]">
         <div className="flex items-center justify-between p-4 border-b border-gray-100 h-16 flex-shrink-0">
           {step > 1 && (
             <button onClick={handlePrevious} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
@@ -212,13 +220,16 @@ export function UserInfoForm({ onComplete }: UserInfoFormProps) {
                     value={formData.phoneNumber || ""}
                     onChange={handlePhoneNumberChange}
                     placeholder={stepContent.placeholder}
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9-]*"
                     className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full"
                   />
                   {formData.phoneNumber && !isValidPhoneNumber(formData.phoneNumber) && (
                     <p className="text-red-500 text-sm mt-2">
                       {formData.phoneNumber.length > 0 && !formData.phoneNumber.startsWith('010') 
                         ? "010으로 시작하는 번호를 입력해주세요" 
-                        : "올바른 휴대폰 번호 형식이 아닙니다 (예: 010-1234-5678)"}
+                        : "올바른 휴대폰 번호 형식이 아닙니다"}
                     </p>
                   )}
                 </div>
@@ -261,12 +272,15 @@ export function UserInfoForm({ onComplete }: UserInfoFormProps) {
                     value={formData.birthDate || ""}
                     onChange={handleBirthDateChange}
                     placeholder={stepContent.placeholder}
+                    type="tel"
+                    inputMode="numeric"
+                    pattern="[0-9.]*"
                     maxLength={10}
                     className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full"
                   />
                   {formData.birthDate && !isValidBirthDate(formData.birthDate) && (
                     <p className="text-red-500 text-sm mt-2">
-                      올바른 생년월일을 입력해주세요 (예: 1990.05.15)
+                      올바른 생년월일을 입력해주세요
                     </p>
                   )}
                 </div>

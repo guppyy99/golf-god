@@ -82,8 +82,14 @@ export async function POST(request: NextRequest) {
     let luckyItems = {}
     
     try {
+      // API 키 확인
+      if (!process.env.OPENAI_API_KEY) {
+        throw new Error('OpenAI API 키가 설정되지 않았습니다.')
+      }
+      
+      console.log('OpenAI API 호출 시작...')
       const resp = await openai.chat.completions.create({
-        model: "gpt-5",
+        model: "gpt-4o", // gpt-5에서 gpt-4o로 변경 (더 빠름)
         messages: [
           {
             role: 'system',
@@ -91,10 +97,15 @@ export async function POST(request: NextRequest) {
           },
           {
             role: 'user',
-            content: `사용자 정보\n- 이름: ${userInfo.name}\n- 생년월일: ${userInfo.birthDate}\n- 생시: ${userInfo.birthTime}\n- 성별: ${userInfo.gender}\n- 핸디: ${userInfo.handicap}\n- 오행: ${analysis.element_name}\n\n중요: 이는 2024년 연간 골프 운세입니다. "이번 주", "오늘", "이번 달" 같은 단기적 표현을 사용하지 마세요. "올해", "이번 해", "연간" 등의 표현을 사용하세요.\n\n작성 규칙:\n- "핸디캡" 대신 "핸디" 구어체 사용\n- 드라이버 거리는 "야드" 단위 사용 금지, "거리" 또는 "비거리"로 표현\n- 핸디 20 이하는 비거리 향상보다 숏게임(퍼팅, 웨지, 아이언) 중심으로 설명\n- 정확한 수치(퍼팅 성공률 80%, 드라이버 250야드 등) 사용 금지\n- 기승전결 구조로 논리적 설명: 원인 → 결과 → 전개 → 결론\n- 각 운세 섹션은 반드시 3-4문장으로 구성\n\n예시 (3문장 구조):\n- overallFlow: "올해는 ${userInfo.name}의 골프 인생에 큰 전환점이 될 거라네. 기존의 불안정한 스윙이 안정화되면서 일관성 있는 플레이가 가능해질 걸세. 특히 숏게임에서 큰 발전이 있을 것이고, 이로 인해 전체적인 스코어가 크게 개선될 거라네."\n- mentalFortune: "올해는 골프 멘탈이 크게 강화되는 해가 될 거라네. 어려운 상황에서도 침착함을 유지할 수 있게 되고, 실패를 두려워하지 않는 마음가짐을 갖게 될 걸세. 긍정적인 사고로 어떤 난관도 극복할 수 있는 해가 될 거라네."\n\n요구사항\n- JSON으로만 응답 (키: summary, overallFlow, mentalFortune, skillFortune, physicalFortune, networkFortune, overallMessage, finalAdvice, luckyClub, luckyHole, luckyItem)\n- summary는 "한마디로 [성격특성]이라네" 형식\n- 각 운세 섹션은 반드시 3-4문장으로 구성 (2문장 절대 금지)\n- 연간 운세이므로 "올해", "이번 해", "연간" 표현 사용\n- 핸디에 맞는 구체적이고 과감한 점지 제공\n- 기승전결 구조로 논리적 설명\n- 골신 할아버지의 말투로 친근하지만 확신에 찬 조언\n- luckyClub은 반드시 드라이버/아이언/웨지/퍼터 중 하나의 단어만\n- luckyHole은 "숫자+번홀" 형식 (예: 10번홀)\n- luckyItem은 "색상+아이템+이모지" 형식 (예: "푸른색 골프화+👟", "빨간색 모자+🧢", "검은색 하의+👖")\n\n반드시 각 섹션마다 3문장 이상으로 작성하세요. 2문장으로 작성하면 안 됩니다.`
+            content: `사용자: ${userInfo.name} (${userInfo.birthDate}, ${userInfo.birthTime}, ${userInfo.gender}, 핸디${userInfo.handicap}, ${analysis.element_name})\n\n2024년 골프 운세를 JSON으로 작성해줘.\n\n규칙:\n- 각 섹션은 3-4문장으로 써줘\n- "올해", "이번 해" 같은 말로 써줘\n- 핸디 20 이하는 퍼팅, 웨지 같은 숏게임 위주로 설명해줘\n- 정확한 숫자나 수치는 말하지 마\n- 쉬운 말로, 구어체로 써줘 (전문용어 금지)\n- 골신 할아버지 말투로 친근하게\n\nJSON 키: summary, overallFlow, mentalFortune, skillFortune, physicalFortune, networkFortune, finalAdvice, luckyClub, luckyHole, luckyItem\n\n- summary: "한마디로 [성격]이라네"\n- luckyClub: 드라이버/아이언/웨지/퍼터 중 하나\n- luckyHole: "숫자번홀" 형식\n- luckyItem: "색상+아이템+이모지" 형식`
           }
         ],
-        response_format: { type: 'json_object' }
+        response_format: { type: 'json_object' },
+        max_tokens: 1500, // 토큰 수 제한으로 응답 시간 단축
+        temperature: 0.8, // 창의성과 일관성의 균형
+        top_p: 0.9, // 응답 품질 유지하면서 속도 향상
+        frequency_penalty: 0.1, // 반복 방지
+        presence_penalty: 0.1 // 다양성 증가
       })
 
       const content = resp.choices[0]?.message?.content || ''
@@ -141,6 +152,11 @@ export async function POST(request: NextRequest) {
       }
     } catch (openaiError) {
       console.error('OpenAI API 오류:', openaiError)
+      console.error('오류 상세:', {
+        message: openaiError.message,
+        status: openaiError.status,
+        type: openaiError.type
+      })
       // API 오류 시 기본 운세 사용
       fortuneContent = {
         summary: `한마디로 ${analysis.personality}이라네`,

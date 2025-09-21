@@ -65,3 +65,4 @@ OLLAMA_API_KEY=your_ollama_api_key_here
 ---
 
 골프의 신이 당신의 골프 여정을 응원합니다! 🏌️‍♂️✨
+# Vercel 빌드 캐시 클리어

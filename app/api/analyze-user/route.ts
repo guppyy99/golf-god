@@ -49,16 +49,27 @@ export async function POST(request: NextRequest) {
     // 페이즈 2: 사용자 정보 분석
     const analysis = await analyzeUserInfo(userInfo)
     
-    // 페이즈 3: OpenAI GPT 우선 사용 (OLLAMA는 나중에 추가)
+    // 페이즈 3: OpenAI GPT로만 운세 생성 (하드코딩 완전 제거)
     let fortune
     try {
       console.log('OpenAI API 키 확인:', process.env.OPENAI_API_KEY ? '설정됨' : '설정 안됨')
+      
+      if (!process.env.OPENAI_API_KEY) {
+        throw new Error('OpenAI API 키가 설정되지 않았습니다. Vercel 환경변수에서 OPENAI_API_KEY를 설정해주세요.')
+      }
+      
       fortune = await generateFortuneWithGPT(userInfo, analysis)
       console.log('OpenAI GPT로 운세 생성 완료')
     } catch (error) {
-      console.log('OpenAI GPT 실패, 기본 운세로 대체...')
-      console.log('GPT 오류 상세:', error.message)
-      fortune = await generateDefaultFortune(userInfo, analysis)
+      console.log('OpenAI GPT 실패:', error.message)
+      return NextResponse.json(
+        { 
+          error: '운세 생성에 실패했습니다. OpenAI API 키를 확인해주세요.',
+          details: error.message,
+          setupGuide: 'https://platform.openai.com/account/api-keys'
+        },
+        { status: 500 }
+      )
     }
     
     // JSON 형태로 저장

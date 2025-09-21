@@ -89,280 +89,313 @@ export function UserInfoForm({ onComplete }: UserInfoFormProps) {
     switch (step) {
       case 1:
         return {
-          title: "골신에게 운세를 볼\n당신의 이름은?",
+          title: `안녕하세요!\n이름을 알려주세요.`,
           subtitle: "이름",
-          placeholder: "이름을 입력해주세요",
+          placeholder: "김골프",
         }
       case 2:
         return {
-          title: `${formData.name || "김선우"}님의\n휴대폰 번호를 알려주세요.`,
-          subtitle: "휴대폰 번호",
+          title: `${formData.name || "김골프"}님의\n휴대폰번호를 알려주세요.`,
+          subtitle: "휴대폰번호",
           placeholder: "010-1234-5678",
         }
       case 3:
         return {
-          title: `${formData.name || "김선우"}님의\n성별을 알려주세요.`,
+          title: `${formData.name || "김골프"}님의\n성별을 알려주세요.`,
           subtitle: "성별",
         }
       case 4:
         return {
-          title: `${formData.name || "김선우"}님의\n생년월일을 알려주세요.`,
+          title: `${formData.name || "김골프"}님의\n생년월일을 알려주세요.`,
           subtitle: "생년월일",
           placeholder: "1999.10.24",
         }
       case 5:
         return {
-          title: `${formData.name || "김선우"}님의\n출생시간을 알려주세요.`,
+          title: `${formData.name || "김골프"}님의\n출생시간을 알려주세요.`,
           subtitle: "출생시간",
-          placeholder: "00:00",
+          placeholder: "14:30",
         }
       case 6:
         return {
-          title: `${formData.name || "김선우"}님의\n평균 핸디캡을 알려주세요.`,
+          title: `${formData.name || "김골프"}님의\n골프 핸디캡을 알려주세요.`,
           subtitle: "핸디캡",
-          helper: "기본값 28에서 조절하세요",
+          placeholder: "28",
         }
       default:
-        return { title: "", subtitle: "", placeholder: "" }
+        return {
+          title: "정보를 입력해주세요.",
+          subtitle: "",
+          placeholder: "",
+        }
     }
   }
 
   const stepContent = getStepContent()
 
   return (
-    <>
-      <div className="w-full max-w-sm mx-auto bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-[600px]">
-        <div className="flex items-center justify-between p-4 border-b border-gray-100 h-16 flex-shrink-0">
-          {step > 1 && (
-            <button onClick={handlePrevious} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          )}
-          {step === 1 && <div className="w-10" />}
-          <h1 className="text-lg font-semibold text-gray-800">골프 운세 정보</h1>
-          <div className="w-10" />
+    <div className="w-full max-w-sm mx-auto">
+      {/* 진행 단계 표시 */}
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-gray-500">단계 {step} / {totalSteps}</span>
+          <span className="text-sm text-gray-500">{Math.round((step / totalSteps) * 100)}%</span>
         </div>
-
-        <div className="p-4 h-12 flex-shrink-0">
-          <p className="text-sm font-medium text-blue-600">
-            STEP {step} / {totalSteps}
-          </p>
-        </div>
-
-        <div className="flex-1 px-6 py-8 flex flex-col justify-center">
-          <div className="w-full">
-            <div className="h-32 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 leading-tight whitespace-pre-line">
-                {stepContent.title}
-              </h2>
-            </div>
-
-            <div className="h-40">
-              {step === 1 && (
-                <div className="transition-all duration-300 ease-in-out">
-                  <Label className="text-sm text-gray-500 mb-2 block">{stepContent.subtitle}</Label>
-                  <Input
-                    value={formData.name || ""}
-                    onChange={(e) => updateFormData("name", e.target.value)}
-                    placeholder={stepContent.placeholder}
-                    className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full"
-                  />
-                </div>
-              )}
-
-              {step === 2 && (
-                <div className="transition-all duration-300 ease-in-out">
-                  <Label className="text-sm text-gray-500 mb-2 block">{stepContent.subtitle}</Label>
-                  <Input
-                    value={formData.phoneNumber || ""}
-                    onChange={(e) => updateFormData("phoneNumber", e.target.value)}
-                    placeholder={stepContent.placeholder}
-                    className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full"
-                  />
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="transition-all duration-300 ease-in-out">
-                  <Label className="text-sm text-gray-500 mb-4 block">{stepContent.subtitle}</Label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant={formData.gender === "남성" ? "default" : "outline"}
-                      onClick={() => updateFormData("gender", "남성")}
-                      className={`h-12 text-base font-medium ${
-                        formData.gender === "남성"
-                          ? "bg-blue-500 text-white hover:bg-blue-600"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
-                      }`}
-                    >
-                      남성
-                    </Button>
-                    <Button
-                      variant={formData.gender === "여성" ? "default" : "outline"}
-                      onClick={() => updateFormData("gender", "여성")}
-                      className={`h-12 text-base font-medium ${
-                        formData.gender === "여성"
-                          ? "bg-pink-500 text-white hover:bg-pink-600"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
-                      }`}
-                    >
-                      여성
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {step === 4 && (
-                <div className="transition-all duration-300 ease-in-out">
-                  <Label className="text-sm text-gray-500 mb-2 block">{stepContent.subtitle}</Label>
-                  <Input
-                    value={formData.birthDate || ""}
-                    onChange={handleBirthDateChange}
-                    placeholder={stepContent.placeholder}
-                    maxLength={10}
-                    className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full"
-                  />
-                </div>
-              )}
-
-              {step === 5 && (
-                <div className="transition-all duration-300 ease-in-out space-y-4">
-                  <Label className="text-sm text-gray-500 mb-4 block">{stepContent.subtitle}</Label>
-                  <div className="flex items-center justify-center space-x-4 mb-4">
-                    <Button
-                      variant={noBirthTime ? "default" : "outline"}
-                      onClick={() => {
-                        setNoBirthTime(true)
-                        updateFormData("birthTime", "모름")
-                      }}
-                      className={`h-12 text-base font-medium ${
-                        noBirthTime
-                          ? "bg-gray-500 text-white hover:bg-gray-600"
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
-                      }`}
-                    >
-                      모르겠어요
-                    </Button>
-                  </div>
-
-                  {!noBirthTime && (
-                    <div className="space-y-4">
-                      <Label className="text-sm text-gray-500">출생시간을 입력해주세요</Label>
-                      
-                      {/* 수동 입력 옵션 */}
-                      <div className="space-y-3">
-                        <div>
-                          <Label className="text-xs text-gray-400 mb-1 block">정확한 시간 (예: 14:30)</Label>
-                          <Input
-                            type="time"
-                            value={formData.birthTime?.includes(':') ? formData.birthTime : ''}
-                            onChange={(e) => updateFormData("birthTime", e.target.value)}
-                            className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full"
-                          />
-                        </div>
-                        
-                        <div className="text-center text-sm text-gray-500">또는</div>
-                        
-                        {/* 시간대 토글 */}
-                        <div>
-                          <Label className="text-xs text-gray-400 mb-2 block">대략적인 시간대</Label>
-                          <div className="grid grid-cols-2 gap-2">
-                            {[
-                              { label: "새벽", time: "새벽 (00:00-06:00)", value: "새벽" },
-                              { label: "아침", time: "아침 (06:00-12:00)", value: "아침" },
-                              { label: "오후", time: "오후 (12:00-18:00)", value: "오후" },
-                              { label: "저녁", time: "저녁 (18:00-24:00)", value: "저녁" }
-                            ].map((timeSlot) => (
-                              <Button
-                                key={timeSlot.value}
-                                variant={formData.birthTime === timeSlot.value ? "default" : "outline"}
-                                onClick={() => updateFormData("birthTime", timeSlot.value)}
-                                className={`h-10 text-sm font-medium ${
-                                  formData.birthTime === timeSlot.value
-                                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                                    : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
-                                }`}
-                              >
-                                {timeSlot.label}
-                              </Button>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* 선택된 시간 표시 */}
-                      {formData.birthTime && (
-                        <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-200">
-                          <p className="text-sm text-blue-700 font-medium">
-                            입력된 시간: {formData.birthTime}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {noBirthTime && (
-                    <div className="text-center py-6">
-                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <span className="text-2xl">❓</span>
-                      </div>
-                      <p className="text-gray-600">출생시간을 모르시는군요!</p>
-                      <p className="text-sm text-gray-500 mt-1">기본값으로 진행하겠습니다.</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {step === 6 && (
-                <div className="transition-all duration-300 ease-in-out">
-                  <Label className="text-sm text-gray-500 mb-4 block">{stepContent.helper}</Label>
-                  <div className="flex items-center justify-center space-x-4">
-                    <Button
-                      onClick={() => updateFormData("handicap", Math.max(0, (formData.handicap || 28) - 1))}
-                      className="w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 text-xl font-bold"
-                    >
-                      -
-                    </Button>
-                    <div className="text-4xl font-bold text-gray-800 min-w-[80px] text-center">
-                      {formData.handicap || 28}
-                    </div>
-                    <Button
-                      onClick={() => updateFormData("handicap", Math.min(54, (formData.handicap || 28) + 1))}
-                      className="w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 text-xl font-bold"
-                    >
-                      +
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="p-6 bg-white h-20 flex-shrink-0">
-          <Button
-            onClick={handleNext}
-            disabled={!isStepValid()}
-            className="w-full bg-yellow-400 hover:bg-yellow-500 text-black disabled:opacity-50 h-12 text-base font-medium"
-          >
-            {step === totalSteps ? "완료" : "다음"}
-          </Button>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${(step / totalSteps) * 100}%` }}
+          />
         </div>
       </div>
 
+      {/* 메인 콘텐츠 */}
+      <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+        <div className="text-center mb-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-2 whitespace-pre-line">
+            {stepContent.title}
+          </h2>
+          <p className="text-sm text-gray-600">
+            {stepContent.subtitle}
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          {/* 이름 입력 */}
+          {step === 1 && (
+            <div className="transition-all duration-300 ease-in-out">
+              <Input
+                value={formData.name || ""}
+                onChange={(e) => updateFormData("name", e.target.value)}
+                placeholder={stepContent.placeholder}
+                className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full text-center"
+                autoFocus
+              />
+            </div>
+          )}
+
+          {/* 휴대폰번호 입력 */}
+          {step === 2 && (
+            <div className="transition-all duration-300 ease-in-out">
+              <Input
+                value={formData.phoneNumber || ""}
+                onChange={(e) => updateFormData("phoneNumber", e.target.value)}
+                placeholder={stepContent.placeholder}
+                className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full text-center"
+                autoFocus
+              />
+            </div>
+          )}
+
+          {/* 성별 선택 */}
+          {step === 3 && (
+            <div className="transition-all duration-300 ease-in-out">
+              <div className="grid grid-cols-2 gap-4">
+                <Button
+                  variant={formData.gender === "남성" ? "default" : "outline"}
+                  onClick={() => updateFormData("gender", "남성")}
+                  className={`h-16 text-lg font-medium ${
+                    formData.gender === "남성"
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
+                  }`}
+                >
+                  남성
+                </Button>
+                <Button
+                  variant={formData.gender === "여성" ? "default" : "outline"}
+                  onClick={() => updateFormData("gender", "여성")}
+                  className={`h-16 text-lg font-medium ${
+                    formData.gender === "여성"
+                      ? "bg-pink-500 text-white hover:bg-pink-600"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
+                  }`}
+                >
+                  여성
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* 생년월일 입력 */}
+          {step === 4 && (
+            <div className="transition-all duration-300 ease-in-out">
+              <Input
+                value={formData.birthDate || ""}
+                onChange={handleBirthDateChange}
+                placeholder={stepContent.placeholder}
+                maxLength={10}
+                className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full text-center"
+                autoFocus
+              />
+            </div>
+          )}
+
+          {/* 출생시간 입력 - 완전히 새로 디자인 */}
+          {step === 5 && (
+            <div className="transition-all duration-300 ease-in-out">
+              <Label className="text-sm text-gray-500 mb-4 block">{stepContent.subtitle}</Label>
+              
+              {/* 시간 입력 방식 선택 */}
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <Button
+                    variant={!noBirthTime ? "default" : "outline"}
+                    onClick={() => {
+                      setNoBirthTime(false)
+                      updateFormData("birthTime", "")
+                    }}
+                    className={`h-12 text-base font-medium ${
+                      !noBirthTime
+                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
+                    }`}
+                  >
+                    시간 입력
+                  </Button>
+                  <Button
+                    variant={noBirthTime ? "default" : "outline"}
+                    onClick={() => {
+                      setNoBirthTime(true)
+                      updateFormData("birthTime", "모름")
+                    }}
+                    className={`h-12 text-base font-medium ${
+                      noBirthTime
+                        ? "bg-gray-500 text-white hover:bg-gray-600"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200 border-gray-300"
+                    }`}
+                  >
+                    모르겠어요
+                  </Button>
+                </div>
+
+                {/* 시간 입력 섹션 */}
+                {!noBirthTime && (
+                  <div className="space-y-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <Label className="text-sm text-blue-700 font-medium block">정확한 출생시간</Label>
+                    <Input
+                      type="time"
+                      value={formData.birthTime?.includes(':') ? formData.birthTime : ''}
+                      onChange={(e) => updateFormData("birthTime", e.target.value)}
+                      className="border-2 border-blue-300 rounded-lg bg-white px-3 py-3 text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-200 w-full"
+                      placeholder="14:30"
+                    />
+                    
+                    <div className="text-center text-sm text-blue-600">
+                      또는 대략적인 시간대를 선택하세요
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { label: "새벽", value: "새벽", time: "00:00-06:00" },
+                        { label: "아침", value: "아침", time: "06:00-12:00" },
+                        { label: "오후", value: "오후", time: "12:00-18:00" },
+                        { label: "저녁", value: "저녁", time: "18:00-24:00" }
+                      ].map((timeSlot) => (
+                        <Button
+                          key={timeSlot.value}
+                          type="button"
+                          variant={formData.birthTime === timeSlot.value ? "default" : "outline"}
+                          onClick={() => updateFormData("birthTime", timeSlot.value)}
+                          className={`h-12 text-sm font-medium ${
+                            formData.birthTime === timeSlot.value
+                              ? "bg-blue-600 text-white hover:bg-blue-700"
+                              : "bg-white text-blue-600 hover:bg-blue-50 border-blue-300"
+                          }`}
+                        >
+                          <div className="text-center">
+                            <div className="font-medium">{timeSlot.label}</div>
+                            <div className="text-xs opacity-75">{timeSlot.time}</div>
+                          </div>
+                        </Button>
+                      ))}
+                    </div>
+                    
+                    {formData.birthTime && (
+                      <div className="text-center p-2 bg-white rounded border border-blue-300">
+                        <span className="text-sm text-blue-700 font-medium">
+                          선택된 시간: {formData.birthTime}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* 모르겠어요 섹션 */}
+                {noBirthTime && (
+                  <div className="text-center py-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">❓</span>
+                    </div>
+                    <p className="text-gray-600 text-base mb-2">
+                      출생시간을 모르셔도
+                    </p>
+                    <p className="text-gray-600 text-base mb-4">
+                      기본 사주로 분석해드려요!
+                    </p>
+                    <div className="inline-flex items-center px-4 py-2 bg-white rounded-lg border border-gray-300">
+                      <span className="text-sm text-gray-700 font-medium">
+                        기본 사주로 진행
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 핸디캡 입력 */}
+          {step === 6 && (
+            <div className="transition-all duration-300 ease-in-out">
+              <Input
+                type="number"
+                value={formData.handicap || ""}
+                onChange={(e) => updateFormData("handicap", parseInt(e.target.value) || 0)}
+                placeholder={stepContent.placeholder}
+                min="0"
+                max="54"
+                className="border-0 border-b-2 border-gray-200 rounded-none bg-transparent px-0 py-3 text-base focus:border-blue-600 focus:ring-0 placeholder:text-gray-400 w-full text-center"
+                autoFocus
+              />
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                핸디캡이 없으시면 0을 입력해주세요
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 네비게이션 버튼 */}
+      <div className="flex justify-between items-center">
+        <Button
+          variant="outline"
+          onClick={handlePrevious}
+          disabled={step === 1}
+          className="flex-1 mr-2 bg-white border-gray-300 text-gray-600 hover:bg-gray-50"
+        >
+          이전
+        </Button>
+        <Button
+          onClick={handleNext}
+          disabled={!isStepValid()}
+          className="flex-1 ml-2 bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed"
+        >
+          {step === totalSteps ? "완료" : "다음"}
+        </Button>
+      </div>
+
+      {/* 요약 모달 */}
       {showSummaryModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl w-full max-w-sm mx-4 p-6 animate-in fade-in duration-300">
-            <h3 className="text-xl font-bold text-center mb-6">입력한 정보를 확인하세요!</h3>
-            <div className="space-y-4 mb-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full max-h-[80vh] overflow-y-auto">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">입력 정보 확인</h3>
+            <div className="space-y-3 mb-6">
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-600">이름</span>
                 <span className="font-medium">{formData.name}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">휴대폰 번호</span>
+                <span className="text-gray-600">휴대폰번호</span>
                 <span className="font-medium">{formData.phoneNumber}</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
@@ -382,17 +415,17 @@ export function UserInfoForm({ onComplete }: UserInfoFormProps) {
                 <span className="font-medium">{formData.handicap}</span>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="flex space-x-3">
               <Button
-                onClick={() => setShowSummaryModal(false)}
                 variant="outline"
-                className="h-12 text-base font-medium border-gray-300 hover:bg-gray-50 bg-transparent"
+                onClick={() => setShowSummaryModal(false)}
+                className="flex-1 bg-gray-100 text-gray-600 hover:bg-gray-200"
               >
-                수정하기
+                수정
               </Button>
               <Button
                 onClick={handleSummaryConfirm}
-                className="h-12 text-base font-medium bg-yellow-400 hover:bg-yellow-500 text-black"
+                className="flex-1 bg-blue-600 text-white hover:bg-blue-700"
               >
                 확인
               </Button>
@@ -401,24 +434,36 @@ export function UserInfoForm({ onComplete }: UserInfoFormProps) {
         </div>
       )}
 
+      {/* 약관 동의 모달 */}
       {showTermsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl w-full max-w-sm mx-4 p-6 animate-in fade-in duration-300">
-            <h3 className="text-xl font-bold text-center mb-6">약관 동의</h3>
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <p className="text-sm text-gray-700 leading-relaxed">
-                메가존의 서비스 이용약관 및 개인정보 처리방침에 동의하는 것으로 간주합니다.
-              </p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">개인정보 처리 동의</h3>
+            <div className="text-sm text-gray-600 mb-6 space-y-2">
+              <p>입력하신 개인정보는 골프 운세 생성 목적으로만 사용됩니다.</p>
+              <p>• 이름: 개인화된 운세 메시지 작성</p>
+              <p>• 생년월일, 출생시간: 사주 분석</p>
+              <p>• 핸디캡: 골프 수준별 맞춤 조언</p>
+              <p>• 서비스 완료 후 자동 삭제</p>
             </div>
-            <Button
-              onClick={handleTermsAgree}
-              className="w-full h-12 text-base font-medium bg-yellow-400 hover:bg-yellow-500 text-black"
-            >
-              동의하고 운세보기
-            </Button>
+            <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                onClick={() => setShowTermsModal(false)}
+                className="flex-1 bg-gray-100 text-gray-600 hover:bg-gray-200"
+              >
+                취소
+              </Button>
+              <Button
+                onClick={handleTermsAgree}
+                className="flex-1 bg-blue-600 text-white hover:bg-blue-700"
+              >
+                동의하고 시작
+              </Button>
+            </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   )
 }

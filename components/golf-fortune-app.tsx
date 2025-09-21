@@ -29,23 +29,24 @@ export interface FortuneAnalysis {
     luckyElements: string[]
     weakPoints: string[]
     recommendations: string[]
-    sajuSummary?: string
     element?: string
     element_name?: string
-    element_description?: string
     lucky_numbers?: number[]
   }
   fortune?: {
-    title: string | object
+    title: {
+      greeting: string
+      overallFlow: string
+      mentalFortune: string
+      skillFortune: string
+      physicalFortune: string
+      networkFortune: string
+      overallMessage: string
+      finalAdvice: string
+    }
     luckyClub: string
     luckyHole: string
     luckyItem: string
-  }
-  exportInfo?: {
-    jsonPath: string
-    csvPath: string
-    success: boolean
-    error?: string
   }
 }
 
@@ -126,7 +127,7 @@ export function GolfFortuneApp() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4">
+    <>
       {currentPhase === "intro" && <IntroPage onStart={handleStart} />}
       {currentPhase === "form" && <UserInfoForm onComplete={handleFormComplete} />}
       {(currentPhase === "analyzing" || currentPhase === "generating") && (
@@ -144,10 +145,6 @@ export function GolfFortuneApp() {
         />
       )}
       
-      {/* 페이즈 인디케이터 */}
-      {currentPhase !== "intro" && (
-        <PhaseIndicator currentPhase={currentPhase} />
-      )}
-    </div>
+    </>
   )
 }

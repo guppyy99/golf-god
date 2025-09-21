@@ -27,18 +27,10 @@ export interface FortuneAnalysis {
     recommendations: string[]
   }
   fortune?: {
-    title: string
+    title: string | object
     luckyClub: string
-    luckyBall: string
     luckyHole: string
     luckyItem: string
-    luckyTPO: string
-    roundFortune: string
-    bettingFortune: string
-    courseFortune: string
-    scoreFortune: string
-    strategyFortune: string
-    quote: string
   }
 }
 

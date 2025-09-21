@@ -284,7 +284,9 @@ export function FortuneResult({ userInfo, fortuneData, onRestart }: FortuneResul
             if (navigator.share) {
               navigator.share({
                 title: `${userInfo.name}님의 골프 운세`,
-                text: fortuneData.fortune?.title,
+                text: typeof fortuneData.fortune?.title === 'string' 
+                  ? fortuneData.fortune.title 
+                  : '골프 운세 결과',
                 url: window.location.href,
               })
             }

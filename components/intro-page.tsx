@@ -11,7 +11,7 @@ export function IntroPage({ onStart }: IntroPageProps) {
     <div className="w-full max-w-sm mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
       <div className="w-full aspect-[4/5] relative overflow-hidden">
         <Image 
-          src="/main-image.jpg" 
+          src="/main-campaign.jpg" 
           alt="골프 운세 캠페인 메인 이미지"
           fill
           className="object-cover"

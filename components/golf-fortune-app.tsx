@@ -36,18 +36,10 @@ export interface FortuneAnalysis {
     lucky_numbers?: number[]
   }
   fortune?: {
-    title: string
+    title: string | object
     luckyClub: string
-    luckyBall: string
     luckyHole: string
     luckyItem: string
-    luckyTPO: string
-    roundFortune: string
-    bettingFortune: string
-    courseFortune: string
-    scoreFortune: string
-    strategyFortune: string
-    quote: string
   }
   exportInfo?: {
     jsonPath: string
@@ -104,18 +96,19 @@ export function GolfFortuneApp() {
           recommendations: ['충분한 워밍업을 하세요']
         },
         fortune: {
-          title: "오늘은 신중하게 플레이하세요",
-          luckyClub: "퍼터",
-          luckyBall: "타이틀리스트",
-          luckyHole: "9번홀",
-          luckyItem: "거리측정기",
-          luckyTPO: "청색 상의, 하얀색 하의",
-          roundFortune: "오늘은 차분하게 플레이하는 것이 중요합니다.",
-          bettingFortune: "작은 내기만 하세요.",
-          courseFortune: "평지 코스가 좋겠습니다.",
-          scoreFortune: "평소보다 2-3타 높게 잡으세요.",
-          strategyFortune: "안전한 플레이를 선택하세요.",
-          quote: "골프는 마음의 게임입니다."
+          title: {
+            greeting: `좋네… 자네 ${data.name}의 운세를 보자고 했지? 생년월일 보니, ${data.birthDate}생… ${data.gender}라구? 음, 기운이 뚜렷하네.`,
+            overallFlow: `올해 자네 골프 운세는 목의 기운의 기운이 강하게 들어와 있네. 활발하고 도전적인 성격으로 균형적인 플레이가 잘 맞을 걸세. 핸디캡 ${data.handicap}으로는 아직 백돌이지만, 올해는 기초를 다지는 해가 될 것 같네.`,
+            mentalFortune: `골프는 멘탈이 절반이야. 올해 자네는 OB나 해저드에 빠져도, 그 다음 샷에 집중하면 흐름이 다시 살아날 거라네. "다음 샷이 가장 중요한 샷이다" 이 말을 늘 마음에 새겨두게.`,
+            skillFortune: `드라이버은 아직 들쑥날쑥하지만, 올해는 숏게임에서 성과가 크게 보일 걸세. 웨지 감각이 빨리 붙고, 퍼트에서도 손맛이 좋아질 테니… 작은 연습도 헛되지 않을 걸세.`,
+            physicalFortune: `몸의 기운이 순환하는 해라, 무리하게 치는 것보다 라운딩 뒤 회복과 스트레칭이 중요하다네. 부상만 없으면 올해는 계속 즐겁게 칠 수 있을 게야.`,
+            networkFortune: `동반자 운이 강하게 들어와 있네. 좋은 멘토 같은 골퍼를 만나, 기술도 배우고 골프 철학도 익힐 기회가 있겠구먼.`,
+            overallMessage: `올해 자네 골프 운세는 말이야, "한 방에 확 튀어 오르는 해"가 아니라, 땅을 다지고 천천히 기초를 세우는 해라네.`,
+            finalAdvice: `허허, 그러니 너무 조급해 말고… 올해는 드라이버와 멘탈, 그리고 기본기만 믿고 가면, 자네 골프 인생에 큰 길이 열릴 걸세. ${data.name}아, 오늘도 즐거운 라운드 되게!`
+          },
+          luckyClub: "XXIO 13 Irons",
+          luckyHole: "5번홀",
+          luckyItem: "거리측정기"
         }
       })
       setCurrentPhase("result")

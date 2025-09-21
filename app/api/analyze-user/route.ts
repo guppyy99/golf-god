@@ -52,10 +52,12 @@ export async function POST(request: NextRequest) {
     // 페이즈 3: OpenAI GPT 우선 사용 (OLLAMA는 나중에 추가)
     let fortune
     try {
+      console.log('OpenAI API 키 확인:', process.env.OPENAI_API_KEY ? '설정됨' : '설정 안됨')
       fortune = await generateFortuneWithGPT(userInfo, analysis)
       console.log('OpenAI GPT로 운세 생성 완료')
     } catch (error) {
       console.log('OpenAI GPT 실패, 기본 운세로 대체...')
+      console.log('GPT 오류 상세:', error.message)
       fortune = await generateDefaultFortune(userInfo, analysis)
     }
     
@@ -293,7 +295,8 @@ async function generateFortuneWithGPT(userInfo: UserInfo, analysis: any) {
       throw new Error('OpenAI API 키가 없습니다')
     }
     
-    console.log('백업 GPT 모델 호출...')
+    console.log('OpenAI GPT 모델 호출 시작...')
+    console.log('사용자 정보:', userInfo.name, userInfo.birthDate, userInfo.handicap)
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -325,11 +328,16 @@ async function generateFortuneWithGPT(userInfo: UserInfo, analysis: any) {
     })
 
     if (!response.ok) {
-      throw new Error(`OpenAI API 오류: ${response.status}`)
+      const errorText = await response.text()
+      console.log('OpenAI API 오류 응답:', response.status, errorText)
+      throw new Error(`OpenAI API 오류: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
+    console.log('OpenAI API 응답 받음:', data.choices ? '성공' : '실패')
+    
     if (data.choices && data.choices[0] && data.choices[0].message) {
+      console.log('운세 응답 파싱 시작...')
       return parseFortuneResponse(data.choices[0].message.content, userInfo, analysis)
     }
     throw new Error('OpenAI 응답 파싱 실패')
